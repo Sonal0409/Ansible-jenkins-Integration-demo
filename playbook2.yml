@@ -1,0 +1,18 @@
+- name: Custom variables in Ansible
+  hosts: webserver
+  become: true
+  vars:
+   pkg_name: tomcat
+   pkg_state: present
+   url_path: https://tomcat.apache.org/tomcat-7.0-doc/appdev/sample/sample.war
+   dest_path: /usr/share/tomcat/webapps
+  tasks:
+  - name: Install {{pkg_name}} package on the servers
+    package: name={{pkg_name}} state={{pkg_state}}
+  - name: Start the {{pkg_name}} service
+    service: name={{pkg_name}} state=started
+  - name: Copy a war file on the {{pkg_name}} server
+    get_url: url={{url_path}} dest={{dest_path}}
+  - name: Restart tomcat service
+    service: name={{pkg_name}} state=restarted
+
